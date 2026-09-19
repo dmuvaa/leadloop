@@ -11,7 +11,7 @@ export const initialStages = (): StageState =>
 
 export function ResearchProgress({ stages, providerName }: { stages: StageState; providerName?: string }) {
   return (
-    <div className="rounded-xl border border-zinc-200 bg-white p-5 shadow-card">
+    <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-card">
       <div className="flex items-center justify-between">
         <div className="text-sm font-semibold">Research in progress</div>
         {providerName && (

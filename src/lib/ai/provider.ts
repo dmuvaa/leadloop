@@ -7,6 +7,7 @@ import type {
   OfferAnalysis,
   Opportunity,
   ResearchReport,
+  SellerProfile,
 } from "@/lib/schemas";
 
 /**
@@ -18,6 +19,9 @@ export interface AIProvider {
   readonly name: string;
 
   analyzeOffer(brief: Brief): Promise<OfferAnalysis>;
+
+  /** Read the seller's website and draft offer, ICP and outreach voice for review. */
+  analyzeSellerWebsite(website: string, notes?: { offer?: string; icp?: string }): Promise<SellerProfile>;
 
   findCandidates(brief: Brief, analysis: OfferAnalysis): Promise<Candidate[]>;
 

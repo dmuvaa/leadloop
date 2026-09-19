@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { ResearchForm } from "@/components/research-form";
 import { ResearchProgress, initialStages, type StageState } from "@/components/research-progress";
 import { ProspectFeed } from "@/components/prospect-feed";
-import { Button, Card, Icon, SectionLabel } from "@/components/ui";
+import { Button, Card, Icon, PageHeader, SectionLabel } from "@/components/ui";
 import { useStore } from "@/lib/store";
 import type { Brief, OfferAnalysis, PipelineEvent, Prospect } from "@/lib/schemas";
 
@@ -89,7 +89,7 @@ export default function FindPage() {
         const res = await fetch("/api/research", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(b),
+          body: JSON.stringify({ ...b, excludeDomains: store.excludedDomains }),
           signal: ctrl.signal,
         });
         if (!res.ok || !res.body) {
@@ -136,23 +136,24 @@ export default function FindPage() {
 
   return (
     <div>
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Find opportunities</h1>
-          <p className="mt-1 text-sm text-zinc-500">Describe what you sell and who should buy it. LeadLoop finds the reason to reach out.</p>
-        </div>
-        {phase !== "form" && (
-          <Button
-            variant="secondary"
-            onClick={() => {
-              abortRef.current?.abort();
-              setPhase("form");
-            }}
-          >
-            <Icon name="refresh" /> New search
-          </Button>
-        )}
-      </div>
+      <PageHeader
+        kicker="Research"
+        title="Find opportunities"
+        description="Start with your website. LeadLoop reads it, you review the brief, then it finds the reason to reach out — or skip and write the brief yourself."
+        action={
+          phase !== "form" ? (
+            <Button
+              variant="secondary"
+              onClick={() => {
+                abortRef.current?.abort();
+                setPhase("form");
+              }}
+            >
+              <Icon name="refresh" /> New search
+            </Button>
+          ) : undefined
+        }
+      />
 
       <div className="mt-6">
         {phase === "form" ? (
@@ -167,7 +168,20 @@ export default function FindPage() {
                   <p className="mt-2 text-zinc-700">{brief.offer}</p>
                   <SectionLabel className="mt-3">Ideal customer</SectionLabel>
                   <p className="mt-1 text-zinc-700">{brief.icp}</p>
+                  {brief.website && (
+                    <p className="mt-1 text-zinc-500">
+                      Website: {brief.website.replace(/^https?:\/\//, "")}
+                      {brief.seller ? " · reviewed" : ""}
+                    </p>
+                  )}
                   {brief.location && <p className="mt-1 text-zinc-500">Location: {brief.location}</p>}
+                  {brief.seller && (
+                    <>
+                      <SectionLabel className="mt-3">Outreach voice</SectionLabel>
+                      <p className="mt-1 text-zinc-700">{brief.seller.outreach.tone}</p>
+                      <p className="mt-1 text-xs text-zinc-500">{brief.seller.outreach.cta}</p>
+                    </>
+                  )}
                 </Card>
               )}
               {analysis && (

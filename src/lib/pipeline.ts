@@ -1,6 +1,6 @@
 import type { AIProvider } from "@/lib/ai/provider";
 import type { Brief, Candidate, PipelineEvent, Prospect } from "@/lib/schemas";
-import { newId } from "@/lib/utils";
+import { domainOf, newId } from "@/lib/utils";
 
 /**
  * Runs the agentic pipeline:
@@ -44,12 +44,22 @@ export async function runPipeline(
     emit({ type: "error", message: "We couldn't find companies matching that profile. Try broadening the ideal customer." });
     return;
   }
-  emit({ type: "candidates", candidates });
-  emit({ type: "stage", stage: "find", status: "done", detail: `${candidates.length} companies` });
+  const excluded = new Set((brief.excludeDomains ?? []).map((d) => d.toLowerCase().replace(/^www\./, "")));
+  const filtered = candidates.filter((c) => {
+    const host = domainOf(c.website);
+    return !host || ![...excluded].some((d) => host === d || host.endsWith(`.${d}`));
+  });
+  if (filtered.length === 0) {
+    emit({ type: "stage", stage: "find", status: "error", detail: "No matching companies found." });
+    emit({ type: "error", message: "Every matching company is on your suppression list. Remove a domain in Settings, or broaden the brief." });
+    return;
+  }
+  emit({ type: "candidates", candidates: filtered });
+  emit({ type: "stage", stage: "find", status: "done", detail: `${filtered.length} companies` });
   if (signal?.aborted) return;
 
   // Stage B2/C/D — research, analyze, prepare angles (per prospect, bounded concurrency)
-  emit({ type: "stage", stage: "research", status: "active", detail: `0 of ${candidates.length}` });
+  emit({ type: "stage", stage: "research", status: "active", detail: `0 of ${filtered.length}` });
   let researched = 0;
   let analyzed = 0;
   let contacted = 0;
@@ -62,13 +72,13 @@ export async function runPipeline(
     try {
       const research = await provider.researchProspect(candidate, brief, analysis);
       researched++;
-      emit({ type: "stage", stage: "research", status: "active", detail: `${researched} of ${candidates.length}` });
+      emit({ type: "stage", stage: "research", status: "active", detail: `${researched} of ${filtered.length}` });
       if (researched === 1) emit({ type: "stage", stage: "opportunity", status: "active" });
 
       const opportunity = await provider.analyzeOpportunity(candidate, research, brief, analysis);
       analyzed++;
       if (analyzed === 1) emit({ type: "stage", stage: "angles", status: "active" });
-      emit({ type: "stage", stage: "opportunity", status: "active", detail: `${analyzed} of ${candidates.length}` });
+      emit({ type: "stage", stage: "opportunity", status: "active", detail: `${analyzed} of ${filtered.length}` });
 
       // Contact discovery is best-effort: a failure here must not lose the prospect.
       if (analyzed === 1) emit({ type: "stage", stage: "contacts", status: "active" });
@@ -93,6 +103,7 @@ export async function runPipeline(
         emails: [],
         saved: false,
         inQueue: false,
+        status: "inbox",
         contacts,
         recipient,
       };
@@ -107,7 +118,7 @@ export async function runPipeline(
     }
   };
 
-  const queue = [...candidates];
+  const queue = [...filtered];
   await Promise.all(
     Array.from({ length: Math.min(concurrency, queue.length) }, async () => {
       while (queue.length && !signal?.aborted) {
@@ -117,7 +128,7 @@ export async function runPipeline(
     })
   );
 
-  const total = candidates.length - failed;
+  const total = filtered.length - failed;
   emit({ type: "stage", stage: "research", status: "done", detail: `${researched} researched` });
   emit({ type: "stage", stage: "opportunity", status: total ? "done" : "error", detail: `${total} qualified` });
   emit({ type: "stage", stage: "angles", status: total ? "done" : "error", detail: total ? `${total * 3}+ angles` : undefined });

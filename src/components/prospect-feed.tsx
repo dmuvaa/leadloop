@@ -3,7 +3,8 @@
 import { useMemo, useState } from "react";
 import { ProspectCard } from "@/components/prospect-card";
 import { EmptyState, Icon, compactInputClass } from "@/components/ui";
-import type { Prospect } from "@/lib/schemas";
+import type { Prospect, ProspectStatus } from "@/lib/schemas";
+import { PROSPECT_STATUSES, STATUS_LABEL, prospectStatus } from "@/lib/schemas";
 import { cn } from "@/lib/utils";
 
 type SortKey = "opportunity" | "icp" | "recent";
@@ -13,21 +14,26 @@ export function ProspectFeed({ prospects, emptyAction }: { prospects: Prospect[]
   const [industry, setIndustry] = useState("all");
   const [location, setLocation] = useState("");
   const [savedOnly, setSavedOnly] = useState(false);
+  const [q, setQ] = useState("");
+  const [status, setStatus] = useState<"all" | ProspectStatus>("all");
 
   const industries = useMemo(() => [...new Set(prospects.map((p) => p.company.industry))].sort(), [prospects]);
 
   const filtered = useMemo(() => {
     const loc = location.trim().toLowerCase();
+    const term = q.trim().toLowerCase();
     return prospects
       .filter((p) => industry === "all" || p.company.industry === industry)
       .filter((p) => !loc || p.company.location.toLowerCase().includes(loc))
       .filter((p) => !savedOnly || p.saved)
+      .filter((p) => status === "all" || prospectStatus(p) === status)
+      .filter((p) => !term || `${p.company.name} ${p.company.industry} ${p.opportunity.recommendedAngle.title} ${p.recipient?.email ?? ""}`.toLowerCase().includes(term))
       .sort((a, b) => {
         if (sort === "opportunity") return b.opportunity.opportunityScore - a.opportunity.opportunityScore;
         if (sort === "icp") return b.opportunity.icpFit - a.opportunity.icpFit;
         return b.createdAt.localeCompare(a.createdAt);
       });
-  }, [prospects, industry, location, savedOnly, sort]);
+  }, [prospects, industry, location, savedOnly, sort, q, status]);
 
   if (prospects.length === 0) {
     return (
@@ -43,6 +49,23 @@ export function ProspectFeed({ prospects, emptyAction }: { prospects: Prospect[]
   return (
     <div>
       <div className="flex flex-wrap items-center gap-2">
+        <div className="relative">
+          <Icon name="search" className="pointer-events-none absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-zinc-400" />
+          <input
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder="Search name or angle"
+            className={cn(compactInputClass, "h-8 w-52 pl-8 text-[13px]")}
+          />
+        </div>
+        <select value={status} onChange={(e) => setStatus(e.target.value as "all" | ProspectStatus)} className={cn(compactInputClass, "h-8 text-[13px]")}>
+          <option value="all">All statuses</option>
+          {PROSPECT_STATUSES.map((s) => (
+            <option key={s} value={s}>
+              {STATUS_LABEL[s]}
+            </option>
+          ))}
+        </select>
         <div className="inline-flex rounded-lg border border-zinc-200 bg-white p-0.5 text-[13px]">
           {(
             [

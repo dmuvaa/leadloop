@@ -8,7 +8,7 @@ LeadLoop is an AI opportunity finder. You describe what you sell and who you wan
 
 ```bash
 npm install
-cp .env.example .env.local   # add ANTHROPIC_API_KEY
+cp .env.example .env.local   # add OPENAI_API_KEY or ANTHROPIC_API_KEY
 npm run dev
 ```
 
@@ -18,9 +18,11 @@ Open http://localhost:3000.
 
 | Variable | Required | Purpose |
 |---|---|---|
-| `ANTHROPIC_API_KEY` | Yes | Claude access for research, scoring and email generation |
+| `OPENAI_API_KEY` | One of these | OpenAI access for research, scoring and email generation. Also accepts `OPEN_API_KEY`. Used automatically when set. |
+| `ANTHROPIC_API_KEY` | One of these | Claude access. Used when no OpenAI key is set, or when `LEADLOOP_PROVIDER=anthropic`. |
 | `ANTHROPIC_WORKSPACE_ID` | If key is not workspace-scoped | Sent as the `anthropic-workspace-id` header |
-| `LEADLOOP_MODEL` | No | Model for analysis and writing (default `claude-fable-5-1`) |
+| `LEADLOOP_PROVIDER` | No | `openai` or `anthropic` |
+| `LEADLOOP_MODEL` | No | Model for analysis and writing (default `gpt-4.1` or `claude-fable-5-1`) |
 | `LEADLOOP_RESEARCH_MODEL` | No | Model for web-search research steps (default: same as above) |
 
 Companies are found and researched live via Claude web search. Every evidence item carries a source URL and a status of verified, inferred, potential or unknown.
@@ -56,8 +58,23 @@ Brief → analyzeOffer → findCandidates → researchProspect → analyzeOpport
 ```
 
 - `src/lib/ai/provider.ts` — `AIProvider` interface (swap models without touching UI)
+- `src/lib/ai/openai.ts` — OpenAI implementation (Responses API web search, Zod structured outputs)
 - `src/lib/ai/anthropic.ts` — Claude Fable 5.1 implementation (web search, Zod structured outputs, server-side refusal fallbacks)
 - `src/lib/pipeline.ts` — agent pipeline; emits typed progress events
 - `src/app/api/research/route.ts` — NDJSON streaming endpoint
 - `src/app/api/email/route.ts` — email generation endpoint
-- `src/lib/store.tsx` — localStorage persistence (searches, prospects, queue)
+- `src/lib/store.tsx` — localStorage persistence (searches, prospects, inbox, briefs, lists, campaigns, suppressions)
+
+## Workspace
+
+The research loop is unchanged: brief → research → opportunity → approved email. Around that, LeadLoop now includes the workspace pieces from ProspectDyno that fit this product:
+
+- **Inbox** — Keep or skip newly researched companies
+- **Saved briefs** — reuse an offer + ICP
+- **Lists** — named groups of companies
+- **Campaigns** — named outreach batches from a list or search (sending still requires approval)
+- **History** — every search and the companies it produced
+- **CSV export** — research, scores, evidence and contacts
+- **Your website** — optional. LeadLoop reads it, you review what you sell and how outreach should sound, then research uses that voice
+- **Seed companies** — research a pasted list of names or domains instead of discovering new ones
+- **Notes, suppressions, settings** — local workspace profile and do-not-contact list

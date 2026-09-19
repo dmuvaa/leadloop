@@ -2,12 +2,41 @@ import { z } from "zod";
 
 /* ---------- User brief ---------- */
 
+export const SellerOutreachSchema = z.object({
+  tone: z.string().describe("How the seller sounds on their site, and how emails should sound. e.g. Direct, practical, no jargon."),
+  voice: z.string().describe("One sentence on the writing voice to match."),
+  cta: z.string().describe("The low-commitment ask they should use."),
+  pitch: z.string().describe("How they describe the offer in a first email, grounded in services on the site."),
+  avoid: z.string().describe("What not to claim or lead with, given what the site actually says."),
+});
+export type SellerOutreach = z.infer<typeof SellerOutreachSchema>;
+
+export const SellerProfileSchema = z.object({
+  website: z.string(),
+  companyName: z.string().describe("Seller company name from the site, or empty if unclear."),
+  offer: z.string().describe("What they sell, in one or two sentences, from the site."),
+  icp: z.string().describe("Who they sell to, inferred from services, case studies and markets on the site."),
+  services: z.array(z.string()).describe("Concrete services or products named on the site. 3-8 items."),
+  proof: z.array(z.string()).describe("Case studies, industries served, or other proof on the site. Empty if none."),
+  observations: z.string().describe("What was actually seen on the site. Two or three sentences."),
+  outreach: SellerOutreachSchema,
+  confidence: z.enum(["high", "medium", "low"]),
+});
+export type SellerProfile = z.infer<typeof SellerProfileSchema>;
+
 export const BriefSchema = z.object({
   offer: z.string().min(10, "Tell us a bit more about what you sell."),
   icp: z.string().min(10, "Describe who you want to sell to."),
   location: z.string().optional().default(""),
   count: z.union([z.literal(5), z.literal(10), z.literal(25)]).default(10),
   criteria: z.string().optional().default(""),
+  /** The seller's own website. Read to learn what they provide and how outreach should sound. */
+  website: z.string().optional().default(""),
+  seller: SellerProfileSchema.optional(),
+  /** Names, domains or a small CSV of companies to research instead of discovering new ones. */
+  seeds: z.string().optional().default(""),
+  /** Domains to drop from discovery (suppression list). */
+  excludeDomains: z.array(z.string()).optional().default([]),
 });
 export type Brief = z.infer<typeof BriefSchema>;
 
@@ -124,7 +153,10 @@ export const EmailSchema = z.object({
 });
 export type Email = z.infer<typeof EmailSchema> & { createdAt: string };
 
-/* ---------- Composite prospect record (stored client-side) ---------- */
+/* ---------- Review / workspace records (stored client-side) ---------- */
+
+export const PROSPECT_STATUSES = ["inbox", "kept", "skipped", "queued", "sent"] as const;
+export type ProspectStatus = (typeof PROSPECT_STATUSES)[number];
 
 export type Prospect = {
   id: string;
@@ -144,6 +176,10 @@ export type Prospect = {
   /** Human approval gate. Only approved emails can be sent. */
   approved?: boolean;
   sent?: { at: string; subject: string; angleId: string; to: string; messageId?: string };
+  /** Inbox review state. Derived for older records. */
+  status?: ProspectStatus;
+  notes?: string;
+  listIds?: string[];
 };
 
 export type Search = {
@@ -152,6 +188,62 @@ export type Search = {
   analysis: OfferAnalysis;
   createdAt: string;
   prospectIds: string[];
+};
+
+export type SavedBrief = {
+  id: string;
+  name: string;
+  brief: Brief;
+  createdAt: string;
+};
+
+export type ProspectList = {
+  id: string;
+  name: string;
+  description: string;
+  createdAt: string;
+  prospectIds: string[];
+};
+
+export type Campaign = {
+  id: string;
+  name: string;
+  objective: string;
+  createdAt: string;
+  prospectIds: string[];
+  listId?: string;
+  searchId?: string;
+};
+
+export type Suppression = {
+  id: string;
+  email?: string;
+  domain?: string;
+  reason?: string;
+  createdAt: string;
+};
+
+export type WorkspaceSettings = {
+  name: string;
+  companyName: string;
+  website: string;
+};
+
+export function prospectStatus(p: Prospect): ProspectStatus {
+  if (p.sent) return "sent";
+  if (p.status === "skipped") return "skipped";
+  if (p.inQueue) return "queued";
+  if (p.status === "kept") return "kept";
+  if (p.saved) return "kept";
+  return p.status ?? "inbox";
+}
+
+export const STATUS_LABEL: Record<ProspectStatus, string> = {
+  inbox: "To review",
+  kept: "Kept",
+  skipped: "Skipped",
+  queued: "Queued",
+  sent: "Sent",
 };
 
 /* ---------- Streaming pipeline events ---------- */

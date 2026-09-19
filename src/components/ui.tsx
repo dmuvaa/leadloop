@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from "react";
 import { cn, initials, scoreTone } from "@/lib/utils";
-import type { EvidenceStatus } from "@/lib/schemas";
+import type { EvidenceStatus, ProspectStatus } from "@/lib/schemas";
+import { STATUS_LABEL } from "@/lib/schemas";
 
 /* ---------- Button ---------- */
 
@@ -83,8 +84,8 @@ export function Spinner({ className }: { className?: string }) {
 
 /* ---------- Card ---------- */
 
-export function Card({ className, children }: { className?: string; children: ReactNode }) {
-  return <div className={cn("rounded-xl border border-zinc-200 bg-white shadow-card", className)}>{children}</div>;
+export function Card({ className, children, id }: { className?: string; children: ReactNode; id?: string }) {
+  return <div id={id} className={cn("rounded-2xl border border-zinc-200 bg-white shadow-card", className)}>{children}</div>;
 }
 
 export function SectionLabel({ children, className }: { children: ReactNode; className?: string }) {
@@ -129,6 +130,18 @@ const statusMeta: Record<EvidenceStatus, { label: string; tone: "brand" | "blue"
 export function StatusBadge({ status }: { status: EvidenceStatus }) {
   const m = statusMeta[status];
   return <Badge tone={m.tone}>{m.label}</Badge>;
+}
+
+const prospectTone: Record<ProspectStatus, "neutral" | "brand" | "amber" | "blue" | "red" | "outline"> = {
+  inbox: "blue",
+  kept: "brand",
+  skipped: "neutral",
+  queued: "amber",
+  sent: "brand",
+};
+
+export function ProspectStatusBadge({ status }: { status: ProspectStatus }) {
+  return <Badge tone={prospectTone[status]}>{STATUS_LABEL[status]}</Badge>;
 }
 
 /* ---------- Scores ---------- */
@@ -180,11 +193,40 @@ export function EmptyState({
   icon?: ReactNode;
 }) {
   return (
-    <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-zinc-300 bg-white/60 px-6 py-14 text-center">
-      {icon && <div className="mb-3 text-zinc-400">{icon}</div>}
+    <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-zinc-200 bg-white px-6 py-16 text-center shadow-card">
+      {icon && (
+        <div className="mb-4 flex size-12 items-center justify-center rounded-2xl bg-zinc-50 text-zinc-400 ring-1 ring-zinc-200">
+          {icon}
+        </div>
+      )}
       <h3 className="text-[15px] font-semibold text-ink">{title}</h3>
-      <p className="mt-1 max-w-sm text-sm text-zinc-500">{description}</p>
+      <p className="mt-1 max-w-sm text-sm leading-relaxed text-zinc-500">{description}</p>
       {action && <div className="mt-5">{action}</div>}
+    </div>
+  );
+}
+
+export function PageHeader({
+  kicker,
+  title,
+  description,
+  action,
+}: {
+  kicker?: string;
+  title: string;
+  description?: string;
+  action?: ReactNode;
+}) {
+  return (
+    <div className="flex flex-wrap items-end justify-between gap-4">
+      <div className="min-w-0">
+        {kicker && <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-brand-700">{kicker}</div>}
+        <h1 className={cn("font-semibold tracking-tight text-ink", kicker ? "mt-1 text-2xl md:text-[1.75rem]" : "text-2xl md:text-[1.75rem]")}>
+          {title}
+        </h1>
+        {description && <p className="mt-1.5 max-w-2xl text-sm leading-relaxed text-zinc-500">{description}</p>}
+      </div>
+      {action && <div className="flex flex-wrap items-center gap-2">{action}</div>}
     </div>
   );
 }
@@ -225,12 +267,12 @@ export const inputClass =
 export const compactInputClass =
   "rounded-lg border border-zinc-200 bg-white px-3 text-sm text-ink placeholder:text-zinc-400 transition-colors focus:border-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-600/15";
 
-export function Logo({ className }: { className?: string }) {
+export function Logo({ className, markClassName }: { className?: string; markClassName?: string }) {
   return (
     <span className={cn("inline-flex items-center gap-2 font-semibold tracking-tight text-ink", className)}>
-      <span className="relative flex size-6 items-center justify-center rounded-md bg-ink">
+      <span className={cn("relative flex size-6 items-center justify-center rounded-md bg-ink", markClassName)}>
         <span className="absolute size-3 rounded-full border-[2.5px] border-white" />
-        <span className="absolute size-1.5 translate-x-1 translate-y-1 rounded-full bg-brand-500 ring-2 ring-ink" />
+        <span className="absolute size-1.5 translate-x-1 translate-y-1 rounded-full bg-brand-500 ring-2 ring-current" />
       </span>
       LeadLoop
     </span>
@@ -285,8 +327,31 @@ export function Icon({ name, className }: { name: IconName; className?: string }
       return <svg {...common}><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3" /></svg>;
     case "alert":
       return <svg {...common}><path d="M12 9v4M12 17h.01" /><path d="M10.3 3.9 2.6 17.2A2 2 0 0 0 4.3 20h15.4a2 2 0 0 0 1.7-2.8L13.7 3.9a2 2 0 0 0-3.4 0Z" /></svg>;
+    case "inbox":
+      return <svg {...common}><path d="M4 6h16v12H4z" /><path d="M4 13h4l2 3h4l2-3h4" /></svg>;
+    case "history":
+      return <svg {...common}><path d="M4 13a8 8 0 1 0 2.3-5.6" /><path d="M4 5v4h4" /><path d="M12 8v5l3 2" /></svg>;
+    case "megaphone":
+      return <svg {...common}><path d="M4 10v4l12 5V5L4 10Z" /><path d="M16 9.5v5" /><path d="M7 14.2V19a2 2 0 0 0 2.4 2l1.6-.4" /></svg>;
+    case "settings":
+      return <svg {...common}><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z" /></svg>;
+    case "download":
+      return <svg {...common}><path d="M12 4v12" /><path d="m7 11 5 5 5-5" /><path d="M5 20h14" /></svg>;
+    case "folder":
+      return <svg {...common}><path d="M3 7h6l2 2h10v10H3z" /></svg>;
+    case "menu":
+      return <svg {...common}><path d="M4 7h16M4 12h16M4 17h16" /></svg>;
+    case "table":
+      return <svg {...common}><rect x="3" y="4" width="18" height="16" rx="2" /><path d="M3 10h18M9 10v10M15 10v10" /></svg>;
+    case "users":
+      return <svg {...common}><circle cx="9" cy="8" r="3" /><path d="M3 19a6 6 0 0 1 12 0" /><circle cx="17" cy="9" r="2.5" /><path d="M17 19a5 5 0 0 0-3-4.5" /></svg>;
+    case "file":
+      return <svg {...common}><path d="M7 3h7l5 5v13H7z" /><path d="M14 3v5h5" /></svg>;
+    case "slash":
+      return <svg {...common}><circle cx="12" cy="12" r="9" /><path d="M6 18 18 6" /></svg>;
   }
 }
 export type IconName =
   | "search" | "grid" | "list" | "send" | "bookmark" | "bookmark-filled" | "check" | "copy" | "refresh" | "external"
-  | "arrow-right" | "arrow-left" | "clock" | "sparkle" | "mail" | "x" | "plus" | "filter" | "pin" | "building" | "trash" | "alert";
+  | "arrow-right" | "arrow-left" | "clock" | "sparkle" | "mail" | "x" | "plus" | "filter" | "pin" | "building" | "trash" | "alert"
+  | "inbox" | "history" | "megaphone" | "settings" | "download" | "folder" | "menu" | "table" | "users" | "file" | "slash";

@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Badge, Button, Icon, compactInputClass, inputClass } from "@/components/ui";
 import { useStore } from "@/lib/store";
 import type { Contact, Email, Prospect } from "@/lib/schemas";
-import { cn, timeAgo } from "@/lib/utils";
+import { cn, domainOf, timeAgo } from "@/lib/utils";
 
 export type MailConfig = { configured: boolean; from?: string; senderName?: string; dailyCap: number; sentToday: number };
 
@@ -136,7 +136,7 @@ function ContactChip({ c, onUse, active }: { c: Contact; onUse: () => void; acti
 }
 
 export function SendPanel({ prospect: p, config, compact }: { prospect: Prospect; config: MailConfig | null; compact?: boolean }) {
-  const { setRecipient, setApproved, markSent } = useStore();
+  const { setRecipient, setApproved, markSent, suppressions } = useStore();
   const [email, setEmail] = useState(p.recipient?.email ?? "");
   const [name, setName] = useState(p.recipient?.name ?? "");
   const [sending, setSending] = useState(false);
@@ -151,7 +151,12 @@ export function SendPanel({ prospect: p, config, compact }: { prospect: Prospect
 
   const draft = pickEmail(p);
   const validEmail = EMAIL_RE.test(email.trim());
-  const ready = canSend(p, config);
+  const suppressed = suppressions.some((s) => {
+    const addr = email.trim().toLowerCase();
+    const host = addr.split("@")[1] ?? domainOf(p.company.website);
+    return (s.email && s.email.toLowerCase() === addr) || (s.domain && host && (host === s.domain || host.endsWith(`.${s.domain}`)));
+  });
+  const ready = canSend(p, config) && !suppressed;
 
   const send = async () => {
     setSending(true);
@@ -201,7 +206,7 @@ export function SendPanel({ prospect: p, config, compact }: { prospect: Prospect
   );
 
   const sendBtn = (
-    <Button onClick={send} loading={sending} disabled={!ready} title={hint(p, config, validEmail)}>
+    <Button onClick={send} loading={sending} disabled={!ready} title={hint(p, config, validEmail, suppressed)}>
       <Icon name="send" /> Send
     </Button>
   );
@@ -235,7 +240,7 @@ export function SendPanel({ prospect: p, config, compact }: { prospect: Prospect
         {approve}
         {sendBtn}
         {error && <span className="text-xs text-red-600">{error}</span>}
-        {!error && !ready && <span className="text-xs text-zinc-400">{hint(p, config, validEmail)}</span>}
+        {!error && !ready && <span className="text-xs text-zinc-400">{hint(p, config, validEmail, suppressed)}</span>}
         </div>
       </div>
     );
@@ -248,13 +253,14 @@ export function SendPanel({ prospect: p, config, compact }: { prospect: Prospect
       <div className="flex flex-wrap items-center gap-2">
         {approve}
         {sendBtn}
-        <span className="text-xs text-zinc-500">{error ? <span className="text-red-600">{error}</span> : hint(p, config, validEmail)}</span>
+        <span className="text-xs text-zinc-500">{error ? <span className="text-red-600">{error}</span> : hint(p, config, validEmail, suppressed)}</span>
       </div>
     </div>
   );
 }
 
-function hint(p: Prospect, config: MailConfig | null, validEmail: boolean) {
+function hint(p: Prospect, config: MailConfig | null, validEmail: boolean, suppressed = false) {
+  if (suppressed) return "Recipient is on the suppression list";
   if (!config?.configured) return "Gmail not connected";
   if (!pickEmail(p)) return "Generate an email first";
   if (!validEmail) return "Add a recipient email";

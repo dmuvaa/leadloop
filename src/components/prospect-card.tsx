@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { Badge, Button, Card, CompanyMark, Icon, Score, StatusBadge } from "@/components/ui";
+import { Badge, Button, Card, CompanyMark, Icon, ProspectStatusBadge, Score, StatusBadge } from "@/components/ui";
 import { useStore } from "@/lib/store";
 import type { Prospect } from "@/lib/schemas";
+import { prospectStatus } from "@/lib/schemas";
 import { cn, hostOf } from "@/lib/utils";
 
 export function ProspectCard({ prospect, className }: { prospect: Prospect; className?: string }) {
@@ -12,7 +13,7 @@ export function ProspectCard({ prospect, className }: { prospect: Prospect; clas
   const href = `/app/prospects/${prospect.id}`;
 
   return (
-    <Card className={cn("flex flex-col p-5 animate-rise", className)}>
+    <Card className={cn("flex flex-col rounded-2xl p-5 animate-rise", className)}>
       <div className="flex items-start justify-between gap-3">
         <div className="flex min-w-0 items-center gap-3">
           <CompanyMark name={company.name} />
@@ -34,13 +35,7 @@ export function ProspectCard({ prospect, className }: { prospect: Prospect; clas
           </div>
         </div>
         <div className="flex shrink-0 flex-wrap items-center justify-end gap-1.5">
-          {prospect.sent ? (
-            <Badge tone="brand"><Icon name="send" className="size-3" /> Sent</Badge>
-          ) : prospect.inQueue ? (
-            <Badge tone="brand"><Icon name="check" className="size-3" /> Queued</Badge>
-          ) : prospect.saved ? (
-            <Badge tone="outline">Saved</Badge>
-          ) : null}
+          <ProspectStatusBadge status={prospectStatus(prospect)} />
         </div>
       </div>
 

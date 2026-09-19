@@ -8,11 +8,13 @@
   --color-brand-600: #0d7a5f;
   --color-brand-700: #0a5f4a;
   --color-brand-800: #084a3a;
-  --color-ink: #0f1419;
+  --color-ink: #0b1220;
+  --color-sidebar: #0b1220;
+  --color-sidebar-muted: #94a3b8;
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
-  --shadow-card: 0 1px 2px rgb(15 20 25 / 0.04), 0 1px 3px rgb(15 20 25 / 0.06);
-  --shadow-pop: 0 8px 24px -8px rgb(15 20 25 / 0.18), 0 2px 6px rgb(15 20 25 / 0.06);
+  --shadow-card: 0 1px 2px rgb(15 20 25 / 0.04), 0 8px 24px -16px rgb(15 20 25 / 0.12);
+  --shadow-pop: 0 16px 40px -18px rgb(15 20 25 / 0.22), 0 2px 8px rgb(15 20 25 / 0.06);
   --animate-pulse-dot: pulse-dot 1.4s ease-in-out infinite;
   --animate-rise: rise 0.35s ease-out both;
   --animate-shimmer: shimmer 1.6s linear infinite;
@@ -36,7 +38,7 @@ html {
 }
 
 body {
-  background: #fafafa;
+  background: #f4f6f8;
   color: var(--color-ink);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;

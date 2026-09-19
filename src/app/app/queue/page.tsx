@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Button, ButtonLink, Card, CompanyMark, EmptyState, Icon, SectionLabel } from "@/components/ui";
+import { Button, ButtonLink, Card, CompanyMark, EmptyState, Icon, PageHeader, SectionLabel } from "@/components/ui";
 import { FindContactButton, GmailBanner, SendPanel, canSend, pickEmail, sendProspectEmail, useMailConfig } from "@/components/send-panel";
 import { useStore } from "@/lib/store";
 import type { Prospect } from "@/lib/schemas";
@@ -36,20 +36,20 @@ export default function QueuePage() {
 
   return (
     <div>
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Outreach queue</h1>
-          <p className="mt-1 text-sm text-zinc-500">
-            {hydrated ? `${queued.length} queued · ${ready.length} ready · ${sent.length} sent` : " "}
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <ButtonLink href="/app/prospects" variant="secondary">Add prospects</ButtonLink>
-          <Button onClick={sendAll} disabled={sendable.length === 0 || bulk?.running} loading={bulk?.running}>
-            <Icon name="send" /> Send all approved{sendable.length ? ` (${sendable.length})` : ""}
-          </Button>
-        </div>
-      </div>
+      <PageHeader
+        kicker="Outreach"
+        title="Outreach queue"
+        description={hydrated ? `${queued.length} queued · ${ready.length} ready · ${sent.length} sent` : "Approve a recipient, then send from your Gmail."}
+        action={
+          <>
+            <ButtonLink href="/app/campaigns" variant="secondary">Campaigns</ButtonLink>
+            <ButtonLink href="/app/prospects" variant="secondary">Add prospects</ButtonLink>
+            <Button onClick={sendAll} disabled={sendable.length === 0 || bulk?.running} loading={bulk?.running}>
+              <Icon name="send" /> Send all approved{sendable.length ? ` (${sendable.length})` : ""}
+            </Button>
+          </>
+        }
+      />
 
       <div className="mt-5">
         <GmailBanner config={config} />

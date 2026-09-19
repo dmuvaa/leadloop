@@ -3,13 +3,17 @@
 import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Badge, Button, Card, CompanyMark, EmptyState, Icon, Score, SectionLabel, StatusBadge } from "@/components/ui";
+import { AddToList } from "@/components/add-to-list";
+import { CompanyNotes } from "@/components/company-notes";
+import { InboxActions } from "@/components/inbox-actions";
+import { Badge, Button, Card, CompanyMark, EmptyState, Icon, ProspectStatusBadge, Score, SectionLabel, StatusBadge } from "@/components/ui";
 import { FindContactButton, SendPanel, useMailConfig } from "@/components/send-panel";
 import { useStore } from "@/lib/store";
 import type { Angle, Brief, Email } from "@/lib/schemas";
+import { prospectStatus } from "@/lib/schemas";
 import { cn, hostOf, timeAgo } from "@/lib/utils";
 
-const FALLBACK_BRIEF: Brief = { offer: "Our services", icp: "Growing businesses", location: "", count: 10, criteria: "" };
+const FALLBACK_BRIEF: Brief = { offer: "Our services", icp: "Growing businesses", location: "", count: 10, criteria: "", website: "", seeds: "", excludeDomains: [] };
 
 export default function ProspectPage() {
   const { id } = useParams<{ id: string }>();
@@ -118,6 +122,7 @@ export default function ProspectPage() {
           <div>
             <div className="flex flex-wrap items-center gap-2">
               <h1 className="text-2xl font-semibold tracking-tight">{company.name}</h1>
+              <ProspectStatusBadge status={prospectStatus(prospect)} />
               {prospect.inQueue && <Badge tone="brand"><Icon name="check" className="size-3" /> In outreach queue</Badge>}
             </div>
             <div className="mt-1 flex flex-wrap items-center gap-x-2 text-sm text-zinc-500">
@@ -148,7 +153,8 @@ export default function ProspectPage() {
             </div>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          {prospectStatus(prospect) === "inbox" && <InboxActions prospectId={prospect.id} showOpen={false} />}
           <Button variant="secondary" onClick={() => store.toggleSaved(prospect.id)} className={cn(prospect.saved && "text-brand-700")}>
             <Icon name={prospect.saved ? "bookmark-filled" : "bookmark"} /> {prospect.saved ? "Saved" : "Save"}
           </Button>
@@ -256,6 +262,32 @@ export default function ProspectPage() {
           </Card>
 
           {/* Research details */}
+          <Card className="p-5">
+            <SectionLabel>Lists</SectionLabel>
+            <div className="mt-3">
+              <AddToList prospectId={prospect.id} />
+            </div>
+            {(prospect.listIds ?? []).length > 0 && (
+              <div className="mt-3 flex flex-wrap gap-1.5">
+                {(prospect.listIds ?? []).map((lid) => {
+                  const list = store.lists.find((l) => l.id === lid);
+                  return list ? (
+                    <Link key={lid} href={`/app/lists/${lid}`} className="rounded-md bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-700 hover:bg-zinc-200">
+                      {list.name}
+                    </Link>
+                  ) : null;
+                })}
+              </div>
+            )}
+          </Card>
+
+          <Card className="p-5">
+            <SectionLabel>Notes</SectionLabel>
+            <div className="mt-3">
+              <CompanyNotes prospectId={prospect.id} notes={prospect.notes} />
+            </div>
+          </Card>
+
           <Card className="p-5">
             <SectionLabel>Research notes</SectionLabel>
             <dl className="mt-3 grid gap-4 text-sm sm:grid-cols-2">
