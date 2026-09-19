@@ -15,12 +15,12 @@ export default function Dashboard() {
   return (
     <div>
       <PageHeader
-        kicker="Workspace"
-        title={settings.name || "Find the reason to reach out."}
-        description="LeadLoop researches prospects, identifies real opportunities, and gives you a personalized reason to start the conversation."
+        kicker="Pipeline"
+        title={settings.name || "B2B leads and outreach"}
+        description="Find companies, qualify each lead, then send a first email you approved."
         action={
           <ButtonLink href="/app/find" size="lg">
-            <Icon name="search" /> Find Opportunities
+            <Icon name="search" /> Find B2B leads
           </ButtonLink>
         }
       />
@@ -57,11 +57,11 @@ export default function Dashboard() {
         <div className="mt-8">
           <EmptyState
             icon={<Icon name="sparkle" className="size-6" />}
-            title="No research yet"
-            description="Tell LeadLoop what you sell and who you want to sell to. It will research companies and find a reason to contact each one."
+            title="No leads yet"
+            description="Tell LeadLoop what you sell and which accounts to hunt. It will find companies and draft outreach for each one."
             action={
               <ButtonLink href="/app/find">
-                <Icon name="search" /> Find Opportunities
+                <Icon name="search" /> Find B2B leads
               </ButtonLink>
             }
           />

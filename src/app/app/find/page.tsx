@@ -137,9 +137,9 @@ export default function FindPage() {
   return (
     <div>
       <PageHeader
-        kicker="Research"
-        title="Find opportunities"
-        description="Start with your website. LeadLoop reads it, you review the brief, then it finds the reason to reach out — or skip and write the brief yourself."
+        kicker="Lead generation"
+        title="Find B2B leads"
+        description="Start with your website so outreach sounds like you. LeadLoop finds companies that match who you sell to, researches each lead, and drafts the first email — or skip and write the brief yourself."
         action={
           phase !== "form" ? (
             <Button
@@ -164,9 +164,9 @@ export default function FindPage() {
               <ResearchProgress stages={stages} providerName={meta?.providerName} />
               {brief && (
                 <Card className="p-4 text-sm">
-                  <SectionLabel>Your brief</SectionLabel>
+                  <SectionLabel>What you sell</SectionLabel>
                   <p className="mt-2 text-zinc-700">{brief.offer}</p>
-                  <SectionLabel className="mt-3">Ideal customer</SectionLabel>
+                  <SectionLabel className="mt-3">B2B leads to find</SectionLabel>
                   <p className="mt-1 text-zinc-700">{brief.icp}</p>
                   {brief.website && (
                     <p className="mt-1 text-zinc-500">
@@ -186,7 +186,7 @@ export default function FindPage() {
               )}
               {analysis && (
                 <Card className="p-4 text-sm animate-rise">
-                  <SectionLabel>What we&apos;re looking for</SectionLabel>
+                  <SectionLabel>Buying signals we&apos;re hunting</SectionLabel>
                   <ul className="mt-2 space-y-1.5 text-zinc-700">
                     {analysis.buyingSignals.slice(0, 4).map((s) => (
                       <li key={s} className="flex gap-2">
@@ -226,7 +226,7 @@ export default function FindPage() {
 
               <div className="mb-3 flex items-center justify-between">
                 <SectionLabel>
-                  {running ? "Opportunities arriving" : `${prospects.length} opportunities`}
+                  {running ? "Leads arriving" : `${prospects.length} ${prospects.length === 1 ? "lead" : "leads"}`}
                 </SectionLabel>
                 {running && <span className="text-xs text-zinc-500 tabular">{prospects.length} ready</span>}
               </div>

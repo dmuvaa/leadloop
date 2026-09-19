@@ -13,7 +13,7 @@ export default function SearchesPage() {
       <PageHeader
         kicker="History"
         title="Searches"
-        description="Every brief LeadLoop researched. Open one to see the companies it found."
+        description="Every lead search LeadLoop ran. Open one to see the companies it found."
         action={<ButtonLink href="/app/find">New search</ButtonLink>}
       />
 
@@ -24,8 +24,8 @@ export default function SearchesPage() {
           <EmptyState
             icon={<Icon name="history" className="size-6" />}
             title="No searches yet"
-            description="Describe what you sell and who you sell to. Researched companies appear as they are scored."
-            action={<ButtonLink href="/app/find">Find opportunities</ButtonLink>}
+            description="Describe what you sell and who the leads should be. Researched companies appear as they are scored."
+            action={<ButtonLink href="/app/find">Find B2B leads</ButtonLink>}
           />
         </div>
       ) : (

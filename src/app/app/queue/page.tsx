@@ -89,7 +89,7 @@ export default function QueuePage() {
           <EmptyState
             icon={<Icon name="send" className="size-6" />}
             title="Your outreach queue is empty"
-            description="Open a prospect, pick an angle, generate an email, and add it here. This is your Monday-morning list."
+            description="Open a lead, pick an angle, generate an email, and add it here. This is the list you send from."
             action={<ButtonLink href="/app/prospects">Browse prospects</ButtonLink>}
           />
         </div>

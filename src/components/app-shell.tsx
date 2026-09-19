@@ -12,7 +12,7 @@ const groups: { label: string; items: { href: string; label: string; icon: IconN
     label: "Work",
     items: [
       { href: "/app", label: "Dashboard", icon: "grid", exact: true },
-      { href: "/app/find", label: "Find opportunities", icon: "search" },
+      { href: "/app/find", label: "Find leads", icon: "search" },
       { href: "/app/inbox", label: "Inbox", icon: "inbox", count: "inbox" },
       { href: "/app/prospects", label: "Prospects", icon: "building", count: "prospects" },
       { href: "/app/queue", label: "Outreach queue", icon: "send", count: "queue" },
@@ -75,7 +75,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
       <div className="px-3">
         <ButtonLink href="/app/find" className="w-full bg-brand-600 text-white shadow-none hover:bg-brand-500">
-          <Icon name="sparkle" /> Find opportunities
+          <Icon name="sparkle" /> Find leads
         </ButtonLink>
       </div>
 

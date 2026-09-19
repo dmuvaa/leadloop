@@ -15,7 +15,7 @@ export default function BriefsPage() {
       <PageHeader
         kicker="Setup"
         title="Saved briefs"
-        description="Reuse an offer and ideal-customer description. Open Find opportunities and pick a brief, or start a new one."
+        description="Reuse an offer and ideal-customer description. Open Find leads and pick a brief, or start a new one."
         action={
           <ButtonLink href="/app/find">
             <Icon name="plus" /> New brief
@@ -30,8 +30,8 @@ export default function BriefsPage() {
           <EmptyState
             icon={<Icon name="file" className="size-6" />}
             title="No briefs yet"
-            description="Describe what you sell on Find opportunities, then save the brief to reuse it."
-            action={<ButtonLink href="/app/find">Find opportunities</ButtonLink>}
+            description="Describe what you sell on Find leads, then save the brief to reuse it."
+            action={<ButtonLink href="/app/find">Find B2B leads</ButtonLink>}
           />
         </div>
       ) : (

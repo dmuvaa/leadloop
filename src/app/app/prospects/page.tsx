@@ -23,7 +23,7 @@ export default function ProspectsPage() {
       <PageHeader
         kicker="Companies"
         title="Prospects"
-        description="Every company LeadLoop has researched, across all searches."
+        description="Every B2B lead LeadLoop has researched, across all searches."
         action={
           <>
             <ExportButton prospects={filtered} />
@@ -73,7 +73,7 @@ export default function ProspectsPage() {
               prospects={[]}
               emptyAction={
                 <ButtonLink href="/app/find">
-                  <Icon name="search" /> Find Opportunities
+                  <Icon name="search" /> Find B2B leads
                 </ButtonLink>
               }
             />
@@ -85,7 +85,7 @@ export default function ProspectsPage() {
             prospects={filtered}
             emptyAction={
               <ButtonLink href="/app/find">
-                <Icon name="search" /> Find Opportunities
+                <Icon name="search" /> Find B2B leads
               </ButtonLink>
             }
           />

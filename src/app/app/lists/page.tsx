@@ -15,7 +15,7 @@ export default function ListsPage() {
       <PageHeader
         kicker="Organize"
         title="Lists"
-        description="Named groups of companies. Start a campaign from a list when you are ready."
+        description="Named groups of B2B leads. Start a campaign from a list when you are ready to outreach."
         action={<ButtonLink href="/app/prospects">Browse prospects</ButtonLink>}
       />
 
@@ -47,7 +47,7 @@ export default function ListsPage() {
           <EmptyState
             icon={<Icon name="folder" className="size-6" />}
             title="No lists"
-            description="Save qualified companies into named lists before exporting or starting a campaign."
+            description="Save qualified leads into named lists before exporting or starting a campaign."
             action={<ButtonLink href="/app/prospects">Browse prospects</ButtonLink>}
           />
         </div>

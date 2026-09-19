@@ -6,9 +6,9 @@ const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "LeadLoop — Find the reason to reach out.",
+  title: "LeadLoop — B2B lead generation and outreach",
   description:
-    "LeadLoop researches prospects, identifies real opportunities, and gives you a personalized reason to start the conversation.",
+    "Find B2B leads from a live brief, research each company, and send a first email built on evidence — not a bought list.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

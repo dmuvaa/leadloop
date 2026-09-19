@@ -129,7 +129,7 @@ export function ResearchForm({ onSubmit, busy, initial }: { onSubmit: (b: Brief)
     const offer = (form.seller?.offer || form.offer).trim();
     const icp = (form.seller?.icp || form.icp).trim();
     if (offer.length < 10) next.offer = "Tell us a bit more about what you sell.";
-    if (icp.length < 10) next.icp = "Describe who you want to sell to.";
+    if (icp.length < 10) next.icp = "Describe who the B2B leads should be.";
     setErrors(next);
     if (Object.keys(next).length) return;
     onSubmit({
@@ -171,9 +171,9 @@ export function ResearchForm({ onSubmit, busy, initial }: { onSubmit: (b: Brief)
       {step === "website" ? (
         <div>
           <SectionLabel>Step 1 of 2</SectionLabel>
-          <h2 className="mt-1 text-lg font-semibold tracking-tight text-ink">Your website</h2>
+          <h2 className="mt-1 text-lg font-semibold tracking-tight text-ink">Your company website</h2>
           <p className="mt-1 max-w-xl text-sm leading-relaxed text-zinc-500">
-            We’ll read the site to learn what you provide and how outreach should sound. You can skip this and write the brief yourself.
+            We read it to learn what you sell and how a first B2B email from you should sound. Skip if you would rather type the brief.
           </p>
 
           <div className="mt-5">
@@ -210,7 +210,7 @@ export function ResearchForm({ onSubmit, busy, initial }: { onSubmit: (b: Brief)
               disabled={reading}
               className="text-sm font-medium text-zinc-600 hover:text-ink disabled:text-zinc-400"
             >
-              Skip — I’ll enter this myself
+              Skip — I’ll describe the offer myself
             </button>
           </div>
 
@@ -232,12 +232,12 @@ export function ResearchForm({ onSubmit, busy, initial }: { onSubmit: (b: Brief)
             <div>
               <SectionLabel>Step 2 of 2</SectionLabel>
               <h2 className="mt-1 text-lg font-semibold tracking-tight text-ink">
-                {form.seller ? "Review your brief" : "Your brief"}
+                {form.seller ? "Review the lead brief" : "Who you sell, who you hunt"}
               </h2>
               <p className="mt-1 text-sm text-zinc-500">
                 {form.seller
-                  ? "Edit anything that looks off, then find opportunities."
-                  : "Tell us what you sell and who you want to reach."}
+                  ? "Confirm what you sell, who the leads should be, and the outreach voice. Then find companies."
+                  : "This is the brief LeadLoop uses to find B2B leads and write the first email."}
               </p>
             </div>
             <button
@@ -270,7 +270,7 @@ export function ResearchForm({ onSubmit, busy, initial }: { onSubmit: (b: Brief)
                   className={cn(inputClass, "resize-none")}
                 />
               </Field>
-              <Field label="Who do you want to sell to?" error={errors.icp}>
+              <Field label="Who are the B2B leads?" error={errors.icp}>
                 <textarea
                   rows={3}
                   value={form.icp}
@@ -292,7 +292,7 @@ export function ResearchForm({ onSubmit, busy, initial }: { onSubmit: (b: Brief)
                   className={inputClass}
                 />
               </Field>
-              <Field label="Prospects">
+              <Field label="Number of leads">
                 <select value={form.count} onChange={(e) => set("count", Number(e.target.value) as Brief["count"])} className={inputClass}>
                   <option value={5}>5</option>
                   <option value={10}>10</option>
@@ -330,7 +330,7 @@ export function ResearchForm({ onSubmit, busy, initial }: { onSubmit: (b: Brief)
                   />
                 </Field>
                 <p className="mt-1.5 text-xs text-zinc-500">
-                  LeadLoop will research these companies against your offer instead of discovering new ones.
+                  LeadLoop will research these companies as leads against your offer instead of discovering new ones.
                 </p>
               </div>
             )}
@@ -381,7 +381,7 @@ export function ResearchForm({ onSubmit, busy, initial }: { onSubmit: (b: Brief)
             </div>
             <Button type="submit" size="lg" loading={busy}>
               <Icon name="search" />
-              Find Opportunities
+              Find B2B leads
             </Button>
           </div>
         </div>

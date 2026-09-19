@@ -25,8 +25,8 @@ export default function InboxPage() {
       <PageHeader
         kicker="Review"
         title="Inbox"
-        description="Keep the companies worth working. Skip the rest. Drafts stay on the prospect — nothing is sent from here."
-        action={<ButtonLink href="/app/find">Find opportunities</ButtonLink>}
+        description="Keep the leads worth working. Skip the rest. Drafts stay on the company — nothing is sent from here."
+        action={<ButtonLink href="/app/find">Find B2B leads</ButtonLink>}
       />
 
       <div className="mt-6">
@@ -48,9 +48,9 @@ export default function InboxPage() {
             description={
               q
                 ? "Try another filter, or clear it to see companies waiting for review."
-                : "Run a search. Scored companies land here for Keep or Skip."
+                : "Run a search. Scored leads land here for Keep or Skip."
             }
-            action={<ButtonLink href={q ? "/app/inbox" : "/app/find"}>{q ? "Clear filter" : "Find opportunities"}</ButtonLink>}
+            action={<ButtonLink href={q ? "/app/inbox" : "/app/find"}>{q ? "Clear filter" : "Find B2B leads"}</ButtonLink>}
           />
         </div>
       ) : (

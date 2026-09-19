@@ -39,8 +39,8 @@ export function ProspectFeed({ prospects, emptyAction }: { prospects: Prospect[]
     return (
       <EmptyState
         icon={<Icon name="building" className="size-6" />}
-        title="No prospects yet"
-        description="Run a search and researched, scored prospects will show up here."
+        title="No leads yet"
+        description="Run a search and researched, scored B2B leads will show up here."
         action={emptyAction}
       />
     );

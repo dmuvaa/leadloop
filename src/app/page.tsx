@@ -3,10 +3,10 @@ import { ButtonLink, Icon, Logo, Score, Badge, StatusBadge } from "@/components/
 
 const steps = [
   { title: "Your offer", text: "What you sell, in a sentence." },
-  { title: "Your ideal customer", text: "Who should be buying it." },
-  { title: "AI research", text: "Websites, hiring, public signals. Sourced." },
-  { title: "Opportunity detection", text: "Fit, evidence, and a reason to talk." },
-  { title: "Personalized outreach", text: "A first email built on what was found." },
+  { title: "Ideal customer", text: "The B2B accounts you want as leads." },
+  { title: "Find companies", text: "Live search, not a stale list." },
+  { title: "Qualify the lead", text: "Fit, evidence, and why now." },
+  { title: "Outreach email", text: "A first message built on the research." },
 ];
 
 export default function Landing() {
@@ -21,10 +21,10 @@ export default function Landing() {
           <nav className="hidden items-center gap-7 text-sm text-zinc-600 md:flex">
             <a href="#how" className="hover:text-ink">How it works</a>
             <a href="#why" className="hover:text-ink">Why LeadLoop</a>
-            <Link href="/app" className="hover:text-ink">Dashboard</Link>
+            <Link href="/app" className="hover:text-ink">Product</Link>
           </nav>
           <ButtonLink href="/app/find" size="sm">
-            Find Opportunities
+            Find B2B leads
           </ButtonLink>
         </div>
       </header>
@@ -33,19 +33,19 @@ export default function Landing() {
       <section className="mx-auto max-w-6xl overflow-x-clip px-5 pb-16 pt-20 md:pb-24 md:pt-28">
         <div className="grid items-center gap-14 lg:grid-cols-[1.05fr_1fr]">
           <div>
-            <Badge tone="brand" className="mb-5">AI opportunity workspace</Badge>
+            <Badge tone="brand" className="mb-5">B2B lead generation</Badge>
             <h1 className="text-[2.6rem] font-semibold leading-[1.05] tracking-[-0.035em] md:text-6xl">
-              Find the reason
+              Find B2B leads.
               <br />
-              to reach out.
+              Reach out with a reason.
             </h1>
             <p className="mt-6 max-w-lg text-lg leading-relaxed text-zinc-600">
-              LeadLoop researches companies, identifies real opportunities, and gives you a personalized reason to
-              start the conversation.
+              Most sales teams buy a list and send a template. LeadLoop finds companies that match who you sell to,
+              researches each one, and drafts the first email from what is actually on their site.
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <ButtonLink href="/app/find" size="lg">
-                Find Opportunities
+                Find B2B leads
                 <Icon name="arrow-right" />
               </ButtonLink>
               <a
@@ -56,9 +56,9 @@ export default function Landing() {
               </a>
             </div>
             <p className="mt-6 text-sm text-zinc-500">
-              Evidence labelled as <span className="font-medium text-zinc-700">verified</span>,{" "}
+              Every claim is <span className="font-medium text-zinc-700">verified</span>,{" "}
               <span className="font-medium text-zinc-700">inferred</span>, or{" "}
-              <span className="font-medium text-zinc-700">unknown</span>. Never invented.
+              <span className="font-medium text-zinc-700">unknown</span>. Outreach never invents a fact.
             </p>
           </div>
 
@@ -74,7 +74,7 @@ export default function Landing() {
                     <div className="h-2.5 w-24 rounded bg-zinc-100" />
                   </div>
                 </div>
-                <Badge tone="outline">Prospect record</Badge>
+                <Badge tone="outline">B2B lead</Badge>
               </div>
               <div className="mt-5 flex gap-6">
                 <Score label="ICP fit" value={0} />
@@ -82,7 +82,7 @@ export default function Landing() {
               </div>
               <div className="mt-5 space-y-4 text-sm">
                 <div>
-                  <div className="text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500">Why this company</div>
+                  <div className="text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500">Why this lead</div>
                   <div className="mt-2 space-y-1.5">
                     <div className="h-2.5 w-full rounded bg-zinc-100" />
                     <div className="h-2.5 w-5/6 rounded bg-zinc-100" />
@@ -100,7 +100,7 @@ export default function Landing() {
                   </div>
                 </div>
                 <div>
-                  <div className="text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500">Recommended angle</div>
+                  <div className="text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500">Outreach angle</div>
                   <div className="mt-2 h-2.5 w-2/3 rounded bg-zinc-200" />
                 </div>
               </div>
@@ -113,10 +113,10 @@ export default function Landing() {
       <section id="how" className="border-y border-zinc-100 bg-zinc-50/60">
         <div className="mx-auto max-w-6xl px-5 py-20">
           <div className="max-w-xl">
-            <h2 className="text-3xl font-semibold tracking-tight">One brief in. Reasons to call out.</h2>
+            <h2 className="text-3xl font-semibold tracking-tight">From brief to outbound, in one loop.</h2>
             <p className="mt-3 text-zinc-600">
-              LeadLoop runs a structured research pipeline, not a single prompt. Each stage has a job and hands its
-              findings to the next.
+              Describe the offer. LeadLoop finds matching companies, scores each lead, and prepares outreach you
+              approve before anything is sent.
             </p>
           </div>
           <ol className="mt-12 grid gap-4 md:grid-cols-5">
@@ -141,10 +141,10 @@ export default function Landing() {
       <section className="mx-auto max-w-6xl px-5 py-16">
         <div className="grid gap-4 md:grid-cols-4">
           {[
-            { title: "Inbox", text: "Keep or skip each researched company before it hits outreach." },
-            { title: "Lists", text: "Group the fits you want to work, then export or campaign from there." },
-            { title: "Campaigns", text: "Name a batch from a search or list. Sending stays approved and manual." },
-            { title: "History", text: "Every brief and the companies it produced, ready to reopen." },
+            { title: "Inbox", text: "Review new leads. Keep the fits, skip the rest." },
+            { title: "Lists", text: "Build the account list you will work this week." },
+            { title: "Campaigns", text: "Batch outreach from a list or search. Sending stays manual." },
+            { title: "Queue", text: "Approve the recipient, then send the first email from Gmail." },
           ].map((item) => (
             <div key={item.title} className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-card">
               <div className="text-sm font-semibold">{item.title}</div>
@@ -158,14 +158,14 @@ export default function Landing() {
       <section id="why" className="mx-auto max-w-6xl px-5 py-20">
         <h2 className="text-3xl font-semibold tracking-tight">Not another email generator.</h2>
         <p className="mt-3 max-w-xl text-zinc-600">
-          Salespeople don&apos;t struggle to write emails. They struggle to know who to contact and why that person
-          should care.
+          B2B teams do not struggle to write. They struggle to know which company is a lead, and why that company
+          should take the meeting.
         </p>
         <div className="mt-10 grid gap-5 md:grid-cols-3">
           {[
-            { icon: "search" as const, title: "Research", text: "Understand the company before you contact them. Website, hiring, public signals, all with sources." },
-            { icon: "sparkle" as const, title: "Opportunity", text: "Find a specific, evidence-backed reason the company might need your service. Scored, explained, and honest about confidence." },
-            { icon: "send" as const, title: "Outreach", text: "Turn the research into a relevant first conversation. Multiple angles, one clear ask, no fake familiarity." },
+            { icon: "search" as const, title: "Find leads", text: "Companies that match your ICP, discovered live from the web — not a bought list." },
+            { icon: "sparkle" as const, title: "Qualify", text: "A scored reason to contact them, with sources. Honest about what was seen and what was inferred." },
+            { icon: "send" as const, title: "Outreach", text: "A first email from verified observations. Multiple angles, one clear ask, no fake familiarity." },
           ].map((c) => (
             <div key={c.title} className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-card">
               <div className="flex size-9 items-center justify-center rounded-lg bg-brand-50 text-brand-700">
@@ -182,18 +182,18 @@ export default function Landing() {
       <section className="border-t border-zinc-100">
         <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-6 px-5 py-16 md:flex-row md:items-center">
           <div>
-            <h2 className="text-2xl font-semibold tracking-tight">Would you use this on Monday?</h2>
-            <p className="mt-2 text-zinc-600">Enter what you sell and who you sell to. Get researched, scored, explained prospects in minutes.</p>
+            <h2 className="text-2xl font-semibold tracking-tight">Run your next outbound list here.</h2>
+            <p className="mt-2 text-zinc-600">Enter what you sell and who you sell to. Get researched B2B leads and a first email for each.</p>
           </div>
           <ButtonLink href="/app/find" size="lg">
-            Find Opportunities
+            Find B2B leads
             <Icon name="arrow-right" />
           </ButtonLink>
         </div>
         <footer className="border-t border-zinc-100">
           <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-6 text-xs text-zinc-500">
             <Logo className="text-sm" />
-            <span>Built for the Everyday track.</span>
+            <span>B2B lead generation and outreach.</span>
           </div>
         </footer>
       </section>

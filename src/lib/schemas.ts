@@ -250,11 +250,11 @@ export const STATUS_LABEL: Record<ProspectStatus, string> = {
 
 export const STAGES = [
   { id: "offer", label: "Understanding your offer" },
-  { id: "find", label: "Finding relevant companies" },
-  { id: "research", label: "Researching prospects" },
-  { id: "opportunity", label: "Detecting opportunities" },
-  { id: "angles", label: "Preparing outreach angles" },
-  { id: "contacts", label: "Finding contact details" },
+  { id: "find", label: "Finding matching companies" },
+  { id: "research", label: "Researching leads" },
+  { id: "opportunity", label: "Qualifying each lead" },
+  { id: "angles", label: "Preparing outreach" },
+  { id: "contacts", label: "Finding contacts" },
 ] as const;
 export type StageId = (typeof STAGES)[number]["id"];
 export type StageStatus = "waiting" | "active" | "done" | "error";
