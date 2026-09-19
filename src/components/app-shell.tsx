@@ -61,7 +61,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     <>
       <div className="flex h-14 items-center justify-between px-4">
         <Link href="/" aria-label="LeadLoop home" onClick={() => setOpen(false)}>
-          <Logo className="text-white" markClassName="bg-brand-600" />
+          <Logo className="text-white" />
         </Link>
         <button
           type="button"

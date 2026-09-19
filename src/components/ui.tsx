@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from "react";
 import { cn, initials, scoreTone } from "@/lib/utils";
 import type { EvidenceStatus, ProspectStatus } from "@/lib/schemas";
@@ -267,13 +268,10 @@ export const inputClass =
 export const compactInputClass =
   "rounded-lg border border-zinc-200 bg-white px-3 text-sm text-ink placeholder:text-zinc-400 transition-colors focus:border-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-600/15";
 
-export function Logo({ className, markClassName }: { className?: string; markClassName?: string }) {
+export function Logo({ className }: { className?: string }) {
   return (
     <span className={cn("inline-flex items-center gap-2 font-semibold tracking-tight text-ink", className)}>
-      <span className={cn("relative flex size-6 items-center justify-center rounded-md bg-ink", markClassName)}>
-        <span className="absolute size-3 rounded-full border-[2.5px] border-white" />
-        <span className="absolute size-1.5 translate-x-1 translate-y-1 rounded-full bg-brand-500 ring-2 ring-current" />
-      </span>
+      <Image src="/leadloop-mark.svg" alt="" width={24} height={24} className="size-6" />
       LeadLoop
     </span>
   );
